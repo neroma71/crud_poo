@@ -1,5 +1,5 @@
 <?php
-    class deleteRepository
+    class DeleteRepository
 {
     private PDO $db;
 
