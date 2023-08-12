@@ -1,5 +1,5 @@
 <?php
-    class image
+    class Image
     {
         private int $id;
         private int $articleId;
