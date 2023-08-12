@@ -1,5 +1,5 @@
 <?php
-    class updateRepository
+    class UpdateRepository
     {
         private PDO $db;
     
