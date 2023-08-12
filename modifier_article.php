@@ -8,7 +8,7 @@ $articleRepository = new ArticleRepository($bdd);
 $imageUploader = new ImageUploader('upload/');
 // Vérifier si l'ID de l'article à modifier est passé en paramètre de la requête
 if (isset($_GET['id'])) {
-    $articleId = $_GET['id'];
+    $articleId = (int)$_GET['id'];
     // Récupérer l'article à modifier depuis la base de données
     $articleToUpdate = $articleRepository->findArticleById($articleId);
     if ($articleToUpdate) {
@@ -28,21 +28,26 @@ if (isset($_GET['id'])) {
             if (isset($_FILES['image']) && is_array($_FILES['image']['name'])) {
                 $newImages = array();
                 foreach ($_FILES['image']['name'] as $index => $imageName) {
-                    $imageFile = array(
-                        'name' => $imageName,
-                        'type' => $_FILES['image']['type'][$index],
-                        'tmp_name' => $_FILES['image']['tmp_name'][$index],
-                        'error' => $_FILES['image']['error'][$index],
-                        'size' => $_FILES['image']['size'][$index],
-                    );
-                    try {
-                        $newImages[] = $imageUploader->uploadImage($imageFile);
-                    } catch (Exception $e) {
-                        echo 'Erreur lors de l\'upload de l\'image : ' . $e->getMessage();
+                    // Vérifier si le fichier a été téléchargé avec succès
+                    if ($_FILES['image']['error'][$index] === UPLOAD_ERR_OK) {
+                        $imageFile = array(
+                            'name' => $imageName,
+                            'type' => $_FILES['image']['type'][$index],
+                            'tmp_name' => $_FILES['image']['tmp_name'][$index],
+                            'error' => $_FILES['image']['error'][$index],
+                            'size' => $_FILES['image']['size'][$index],
+                        );
+                        try {
+                            $newImages[] = $imageUploader->uploadImage($imageFile);
+                        } catch (Exception $e) {
+                            echo 'Erreur lors de l\'upload de l\'image : ' . $e->getMessage();
+                        }
                     }
                 }
-                // Ajouter les nouvelles images à l'article
-                $articleToUpdate->setImages($newImages);
+                // Si de nouvelles images ont été ajoutées, les ajouter à l'article
+                if (!empty($newImages)) {
+                    $articleToUpdate->setImages($newImages);
+                }
             }
         
             // Instancier l'ArticleUpdater et mettre à jour l'article dans la base de données
