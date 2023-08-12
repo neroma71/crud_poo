@@ -5,7 +5,7 @@ require_once('utils/db_connect.php');
 $articleRepository = new ArticleRepository($bdd);
 
 if (isset($_GET['id'])) {
-    $articleId = $_GET['id'];
+    $articleId = (int)$_GET['id'];
     $article = $articleRepository->findArticleById($articleId);
 
     if ($article) {
