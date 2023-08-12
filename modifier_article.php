@@ -52,7 +52,7 @@ if (isset($_GET['id'])) {
         
             // Instancier l'ArticleUpdater et mettre à jour l'article dans la base de données
             $articleUpdater = new updateRepository($bdd);
-            $articleUpdater->updateArticle($articleToUpdate, $articleId);
+            $articleUpdater->UpdateArticle($articleToUpdate, $articleId);
         
             // Rediriger vers la page de l'article modifié
             header("Location: article.php?id=" . $articleId);
